@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
-  "version": "1.0.0",
   "type": "module",
+  "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/DianaShilova/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/DianaShilova/frontend-project-lvl2/actions)",
   "bin": {
     "gendiff": "src/bin/gendiff.js"
@@ -25,7 +25,14 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@babel/cli": "^7.18.9",
+    "@babel/core": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
     "@jest/globals": "^28.1.3",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
     "eslint": "^8.19.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",

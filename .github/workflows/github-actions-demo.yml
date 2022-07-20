@@ -9,3 +9,10 @@ jobs:
       - run: npm install 
       - run: make lint
       - run: NODE_OPTIONS=--experimental-vm-modules npx jest --coverage
+
+name: Test & publish code coverage
+uses: paambaati/codeclimate-action@v3
+  env:
+    CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      with:
+      coverageCommand: make test-coverage

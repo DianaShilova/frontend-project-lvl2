@@ -19,5 +19,3 @@ lint:
 
 gendiff:
 	node src/bin/gendiff.js -h
-lint:
-	npx eslint .

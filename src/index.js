@@ -1,14 +1,19 @@
 import path from 'path';
 import fs from 'fs';
 import _ from 'lodash';
+import getParser from './parsers.js';
 
 const getObjFromFile = (filepath) => {
   const cwd = process.cwd();
   const absoluteFilepath = path.resolve(cwd, filepath); // абсолютный путь до filepatch1
 
+  const parts = filepath.split('/');
+  const filename = _.last(parts); // вытаскиваем последний эл массива(имя файла)
+  const format = _.last(filename.split('.')); // вытаскиваем расширенеи (.js)
+
   const dataOfFilepath = fs.readFileSync(absoluteFilepath, 'utf-8'); // вытаскиваем данные из filepath1
 
-  const objOfFilepath = JSON.parse(dataOfFilepath); // данные из filepath1 в виде объекта
+  const objOfFilepath = getParser(dataOfFilepath, format); // данные из filepath1 в виде объекта
 
   return objOfFilepath;
 };

@@ -13,3 +13,6 @@
 Пример: gendiff file1.json file2.json
 
 [![asciicast](https://asciinema.org/a/n2znT6IxBW6fwIq4mDzp067Ji.svg)](https://asciinema.org/a/n2znT6IxBW6fwIq4mDzp067Ji)
+
+[![asciicast](https://asciinema.org/a/7gdmX0KmzLnKoYL3ayb1IgwiY.svg)](https://asciinema.org/a/7gdmX0KmzLnKoYL3ayb1IgwiY)
+

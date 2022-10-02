@@ -2,6 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import _ from 'lodash';
 import getParser from './parsers.js';
+import diff from './diff.js';
+import stylish from './formatters/stylish.js';
 
 const getObjFromFile = (filepath) => {
   const cwd = process.cwd();
@@ -23,9 +25,20 @@ const formatObject = (obj, spaces) => {
   const spacesText = ' '.repeat(spaces * 2);
 
   _.sortBy(Object.keys(obj)).forEach((key) => {
-    result.push(`${spacesText}${key}: ${obj[key]}`);
+    if (_.isObject(obj[key])) {
+      result.push(`${spacesText}${key}: {\n${formatObject(obj[key], spaces + 1)}\n${spacesText}}`);
+    } else {
+      result.push(`${spacesText}${key}: ${obj[key]}`);
+    }
   });
   return result.join('\n');
+};
+
+const format = (key, value, spaces) => {
+  if (_.isObject(value)) {
+    return `${key}: {\n${formatObject(value, spaces + 2)}\n${' '.repeat(spaces * 2)}}`;
+  }
+  return `${key}: ${value}`;
 };
 
 const comareObjects = (obj1, obj2, spaces = 1) => {
@@ -39,26 +52,19 @@ const comareObjects = (obj1, obj2, spaces = 1) => {
 
     if (_.has(obj1, key) && _.has(obj2, key)) { // если ключ есть и в объекте1 и в объекте2
       if (_.isObject(obj1[key]) && _.isObject(obj2[key])) { // и оба ключа объекты
-        result.push(`${spacesText}${key}: {`);
-        result.push(comareObjects(obj1[key], obj2[key], spaces + 1));
-        result.push(`${spacesText}}`);
+        result.push(`${spacesText}  ${key}: {`);
+        result.push(comareObjects(obj1[key], obj2[key], spaces + 2));
+        result.push(`${spacesText}  }`);
       } else if (obj1[key] === obj2[key]) { // и значения равны
         result.push(`${spacesText}  ${key}: ${obj1[key]}`);
       } else { // ключи есть в объектах, но значения не равны
-        result.push(`${spacesText}- ${key}: ${obj1[key]}`);
-        result.push(`${spacesText}+ ${key}: ${obj2[key]}`);
+        result.push(`${spacesText}- ${format(key, obj1[key], spaces)}`);
+        result.push(`${spacesText}+ ${format(key, obj2[key], spaces)}`);
       }
     } else if (_.has(obj1, key)) { // но есть в объекте1
-      if (_.isObject(obj1[key])) { // и вэлью является объектом
-        result.push(`${spacesText}${key}`);
-        result.push(formatObject(obj1[key], spaces * 2));
-      } else {
-        result.push(`${spacesText}- ${key}: ${obj1[key]}`);
-      }
+      result.push(`${spacesText}- ${format(key, obj1[key], spaces)}`);
     } else if (_.isObject(obj2[key])) { // вэлью объекта 2 является объектом
-      result.push(`${spacesText}+ ${key}: {`);
-      result.push(formatObject(obj2[key], spaces * 2));
-      result.push(`${spacesText}}`);
+      result.push(`${spacesText}+ ${format(key, obj2[key], spaces)}`);
     } else {
       result.push(`${spacesText}+ ${key}: ${obj2[key]}`); // но есть в объекте2
     }
@@ -70,9 +76,8 @@ const comareObjects = (obj1, obj2, spaces = 1) => {
 const genDiff = (filepath1, filepath2) => {
   const obj1 = getObjFromFile(filepath1); // достаем данные из файла в виде объекта
   const obj2 = getObjFromFile(filepath2); // достаем данные из файла в виде объекта
-
-  const result = comareObjects(obj1, obj2); // результат функции сравнивающий 2 объекта
-  return `{\n${result}\n}`;
+  const result = diff(obj1, obj2); // результат функции сравнивающий 2 объекта
+  console.log(stylish(result));
 };
 
 export default genDiff;

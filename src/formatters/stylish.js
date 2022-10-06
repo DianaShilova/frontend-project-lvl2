@@ -1,29 +1,86 @@
 import _ from 'lodash';
 
-const stylish = (data, spaces) => {
-  const spacesText = ' '.repeat(spaces * 2);
-  data.forEach((line) => {
-    if (_.isArray(line.value)) {
-      stylish(line.value);
-    } else {
-      switch (line.type) {
-        case '+':
-          console.log(`${spacesText}${line.type} ${line.key}: ${line.value}\n`);
-          break;
-        case '-':
-          console.log(`${spacesText}${line.type} ${line.key}: ${line.value}\n`);
-          break;
-        case '=':
-          console.log(`${spacesText}  ${line.key}: ${line.value}`);
-          break;
-        case '*':
-          console.log(`${spacesText}  ${line.key}: ${line.value}`);
-          break;
-        default:
-          throw new Error(`Type: ${line.type} is undefined`);
-      }
-    }
-  });
+const getSpacesText = (level = 0, hasPrefix = false) => {
+  let spaces;
+  if (hasPrefix) {
+    spaces = level <= 0 ? 2 : level * 4 - 3;
+  } else {
+    spaces = level <= 0 ? 0 : level * 4;
+  }
+
+  return ' '.repeat(spaces);
 };
 
-export default stylish;
+const formatValue = (value, spaces) => {
+  const result = [];
+
+  result.push('{');
+
+  if (!_.isObject(value)) {
+    return `${value}`;
+  }
+
+  _.sortBy(Object.keys(value)).forEach((key) => {
+    if (_.isObject(value[key])) {
+      result.push(
+        `${getSpacesText(spaces)}${key}: ${formatValue(value[key], spaces + 1)}`,
+      );
+    } else {
+      result.push(
+        `${getSpacesText(spaces)}${key}: ${value[key]}`,
+      );
+    }
+  });
+
+  result.push(`${getSpacesText(spaces - 1)}}`);
+  return result.join('\n');
+};
+
+const format = (data, spaces = 1) => {
+  const result = [];
+  result.push('{');
+
+  data.forEach((line) => {
+    switch (line.type) {
+      case '*':
+        result.push(
+          `${getSpacesText(spaces)}${line.key}: ${format(
+            line.value,
+            spaces + 1,
+          )}`,
+        );
+        break;
+      case '=':
+        result.push(
+          `${getSpacesText(spaces, true)}   ${line.key}: ${formatValue(
+            line.value,
+            spaces + 1,
+          )}`,
+        );
+        break;
+      case '+':
+        result.push(
+          `${getSpacesText(spaces, true)} + ${line.key}: ${formatValue(
+            line.value,
+            spaces + 1,
+          )}`,
+        );
+        break;
+      case '-':
+        result.push(
+          `${getSpacesText(spaces, true)} - ${line.key}: ${formatValue(
+            line.value,
+            spaces + 1,
+          )}`,
+        );
+        break;
+      default:
+        console.log('unknown');
+    }
+  });
+  result.push(`${getSpacesText(spaces - 1)}}`);
+
+  return result.join('\n');
+};
+
+export default format;

@@ -22,7 +22,7 @@ const getObjFromFile = (filepath) => {
   return objOfFilepath;
 };
 
-const genDiff = (filepath1, filepath2, formatter) => {
+const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
   const obj1 = getObjFromFile(filepath1); // достаем данные из файла в виде объекта
   const obj2 = getObjFromFile(filepath2); // достаем данные из файла в виде объекта
   const result = diff(obj1, obj2); // результат функции сравнивающий 2 объекта

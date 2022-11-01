@@ -42,7 +42,7 @@ const format = (data, spaces = 1) => {
 
   data.forEach((line) => {
     switch (line.type) {
-      case '*':
+      case 'deep':
         result.push(
           `${getSpacesText(spaces)}${line.key}: ${format(
             line.value,
@@ -50,7 +50,7 @@ const format = (data, spaces = 1) => {
           )}`,
         );
         break;
-      case '=':
+      case 'equal':
         result.push(
           `${getSpacesText(spaces, true)}   ${line.key}: ${formatValue(
             line.value,
@@ -58,7 +58,7 @@ const format = (data, spaces = 1) => {
           )}`,
         );
         break;
-      case '+':
+      case 'added':
         result.push(
           `${getSpacesText(spaces, true)} + ${line.key}: ${formatValue(
             line.value,
@@ -66,10 +66,24 @@ const format = (data, spaces = 1) => {
           )}`,
         );
         break;
-      case '-':
+      case 'removed':
         result.push(
           `${getSpacesText(spaces, true)} - ${line.key}: ${formatValue(
             line.value,
+            spaces + 1,
+          )}`,
+        );
+        break;
+      case 'changed':
+        result.push(
+          `${getSpacesText(spaces, true)} - ${line.key}: ${formatValue(
+            line.value,
+            spaces + 1,
+          )}`,
+        );
+        result.push(
+          `${getSpacesText(spaces, true)} + ${line.key}: ${formatValue(
+            line.newValue,
             spaces + 1,
           )}`,
         );

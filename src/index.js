@@ -4,6 +4,7 @@ import _ from 'lodash';
 import getParser from './parsers.js';
 import diff from './diff.js';
 import stylish from './formatters/stylish.js';
+import plain from './formatters/plain.js';
 
 const getObjFromFile = (filepath) => {
   const cwd = process.cwd();
@@ -20,7 +21,7 @@ const getObjFromFile = (filepath) => {
   return objOfFilepath;
 };
 
-const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
+const genDiff = (filepath1, filepath2, formatter) => {
   const obj1 = getObjFromFile(filepath1); // достаем данные из файла в виде объекта
   const obj2 = getObjFromFile(filepath2); // достаем данные из файла в виде объекта
   const result = diff(obj1, obj2); // результат функции сравнивающий 2 объекта
@@ -29,6 +30,8 @@ const genDiff = (filepath1, filepath2, formatter = 'stylish') => {
     case 'stylish':
       return stylish(result);
 
+    case 'plain':
+      return plain(result);
     default:
       throw new Error('No such formatter');
   }

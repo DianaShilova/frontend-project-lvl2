@@ -5,6 +5,7 @@ import getParser from './parsers.js';
 import diff from './diff.js';
 import stylish from './formatters/stylish.js';
 import plain from './formatters/plain.js';
+import json from './formatters/json.js';
 
 const getObjFromFile = (filepath) => {
   const cwd = process.cwd();
@@ -32,6 +33,8 @@ const genDiff = (filepath1, filepath2, formatter) => {
 
     case 'plain':
       return plain(result);
+    case 'json':
+      return json(result);
     default:
       throw new Error('No such formatter');
   }

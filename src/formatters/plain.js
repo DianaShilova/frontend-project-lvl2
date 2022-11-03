@@ -24,13 +24,13 @@ const print = (line, path = '') => {
       result = [...result, ...line.value.map((innerLine) => print(innerLine, `${addPath(path, line.key)}`))];
       break;
     case 'added':
-      result.push(`Property '${addPath(path, line.key)}' was added with value: ${formatValue(line.value)}`);
+      result = [...result, `Property '${addPath(path, line.key)}' was added with value: ${formatValue(line.value)}`];
       break;
     case 'removed':
-      result.push(`Property '${addPath(path, line.key)}' was removed`);
+      result = [...result, `Property '${addPath(path, line.key)}' was removed`];
       break;
     case 'changed':
-      result.push(`Property '${addPath(path, line.key)}' was updated. From ${formatValue(line.value)} to ${formatValue(line.newValue)}`);
+      result = [...result, `Property '${addPath(path, line.key)}' was updated. From ${formatValue(line.value)} to ${formatValue(line.newValue)}`];
       break;
     case 'equal':
       break;

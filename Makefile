@@ -12,10 +12,10 @@ test-coverage:
 	npm test -- --coverage --coverageProvider=v8
 
 help:
-	npx babel-node src/bin/gendiff.js -h
+	npx babel-node bin/gendiff.js -h
 
 lint:
 	npx eslint .
 
 gendiff:
-	node src/bin/gendiff.js -h
+	node bin/gendiff.js -h

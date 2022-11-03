@@ -41,9 +41,9 @@ const print = (line, path = '') => {
 };
 
 const plain = (data) => {
-  const result = [];
+  let result = [];
   data.forEach((line) => {
-    result.push(print(line));
+    result = [...result, (print(line))];
   });
   return result.flat(Infinity).join('\n');
 };

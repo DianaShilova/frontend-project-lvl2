@@ -18,33 +18,24 @@ const addPath = (path, newPath) => {
 };
 
 const print = (line, path = '') => {
-  let result = [];
   switch (line.type) {
     case 'deep':
-      result = [...result, ...line.value.map((innerLine) => print(innerLine, `${addPath(path, line.key)}`))];
-      break;
+      return line.value.map((innerLine) => print(innerLine, `${addPath(path, line.key)}`));
     case 'added':
-      result = [...result, `Property '${addPath(path, line.key)}' was added with value: ${formatValue(line.value)}`];
-      break;
+      return `Property '${addPath(path, line.key)}' was added with value: ${formatValue(line.value)}`;
     case 'removed':
-      result = [...result, `Property '${addPath(path, line.key)}' was removed`];
-      break;
+      return `Property '${addPath(path, line.key)}' was removed`;
     case 'changed':
-      result = [...result, `Property '${addPath(path, line.key)}' was updated. From ${formatValue(line.value)} to ${formatValue(line.newValue)}`];
-      break;
+      return `Property '${addPath(path, line.key)}' was updated. From ${formatValue(line.value)} to ${formatValue(line.newValue)}`;
     case 'equal':
-      break;
+      return [];
     default:
       throw new Error(`Type: ${line.type} is undefined`);
   }
-  return result;
 };
 
 const plain = (data) => {
-  let result = [];
-  data.forEach((line) => {
-    result = [...result, (print(line))];
-  });
+  const result = data.map((line) => (print(line)));
   return result.flat(Infinity).join('\n');
 };
 
